@@ -84,7 +84,7 @@ if(GLSLANG_TESTS)
 
         if(ENABLE_OPT)
             target_link_libraries(glslangtests
-                PRIVATE SPIRV-Tools-opt
+                PRIVATE ${SPIRV-Tools-Optimizer}
             )
         endif()
 

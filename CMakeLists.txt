@@ -31,11 +31,29 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 cmake_minimum_required(VERSION 3.22.1)
+
+include (cmake/HunterGate.cmake)
+HunterGate(
+    URL "https://github.com/mloccy/hunter/archive/refs/tags/v0.25.14.tar.gz"
+    SHA1 "8b5e788d1c4d58530f876b90bcf67b5e2dd90ba3"
+    LOCAL)
+
 project(glslang)
 
-set(GLSLANG_TESTS_DEFAULT ON) # Can be turned off, below, based on environment.
-set(GLSLANG_ENABLE_INSTALL_DEFAULT ON) # Can be turned off, below, based on environment.
+hunter_add_package(python)
+hunter_add_package(spirv-tools)
+find_package(spirv-tools CONFIG REQUIRED)
+option (GLSLANG_TESTS_DEFAULT ON) # Can be turned off, below, based on environment.
 
+if (GLSLANG_TESTS)
+    hunter_add_package(gtest)
+    find_package(GTest CONFIG REQUIRED)
+    set (GTestMainTarget GTest::gtest_main)
+    set (GTestTarget GTest::gtest)
+    set (GMockTarget GTest::gmock)
+    set (GMockMainTarget GTest::gmock_main)
+endif()
+set(GLSLANG_ENABLE_INSTALL_DEFAULT ON) # Can be turned off, below, based on environment.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON) # Can be removed when min is 3.26 see policy CMP0143.
 
 # Adhere to GNU filesystem layout conventions
@@ -280,7 +298,10 @@ if(BUILD_EXTERNAL AND IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/External)
 endif()
 
 option(ALLOW_EXTERNAL_SPIRV_TOOLS "Allows to build against installed SPIRV-Tools-opt. This is unsupported if the commit isn't the one in known_good.json")
-if(NOT TARGET SPIRV-Tools-opt)
+
+set (SPIRV-Tools-Optimizer spirv-tools::opt)
+
+if(NOT TARGET ${SPIRV-Tools-Optimizer})
     if(ALLOW_EXTERNAL_SPIRV_TOOLS)
         # Look for external SPIR-V Tools build, if not building in-tree
         message(STATUS "Trying to find local SPIR-V tools")
