@@ -35,7 +35,7 @@
 set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS -w)
 
 if(GLSLANG_TESTS)
-    if(TARGET gmock)
+    if(TARGET ${GMockTarget})
         message(STATUS "Google Mock already configured - use it")
     elseif(IS_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/googletest)
         # We need to make sure Google Test does not mess up with the
@@ -46,10 +46,10 @@ if(GLSLANG_TESTS)
         # EXCLUDE_FROM_ALL keeps the install target from installing GTEST files.
         add_subdirectory(googletest EXCLUDE_FROM_ALL)
         set(GTEST_TARGETS
-            gtest
-            gtest_main
-            gmock
-            gmock_main)
+            ${GTestTarget}
+            ${GTestMainTarget}
+            ${GMockTarget}
+            ${GMockMainTarget})
         foreach(target ${GTEST_TARGETS})
             set_property(TARGET ${target} PROPERTY FOLDER gtest)
         endforeach()
@@ -74,4 +74,3 @@ if(ENABLE_OPT AND NOT TARGET SPIRV-Tools-opt)
         add_subdirectory(spirv-tools)
     endif()
 endif()
-
