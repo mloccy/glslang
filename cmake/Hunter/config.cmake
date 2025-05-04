@@ -1,2 +1,1 @@
 hunter_config(python VERSION "v0.1.0" CMAKE_ARGS BUILTIN_PYEXPAT=On)
-hunter_config(SPIRV-Tools VERSION "2025.1-p0" CMAKE_ARGS SPIRV_SKIP_TESTS=On)
