@@ -378,10 +378,6 @@ endif()
 if (GLSLANG_ENABLE_INSTALL)
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/glslang-config.cmake.in" [=[
         @PACKAGE_INIT@
-        include(CMakeFindDependencyMacro)
-        if(@ENABLE_OPT@)
-            find_dependency(SPIRV-Tools-opt)
-        endif()
         @INSTALL_CONFIG_UNIX@
         include("@PACKAGE_PATH_EXPORT_TARGETS@")
     ]=])
